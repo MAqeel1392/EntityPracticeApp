@@ -5,9 +5,11 @@ using EntityPracticeApp.Service;
 using EntityPracticeApp.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EntityPracticeApp.Controllers
 {
+    [Authorize]
     public class StudentsController : Controller
     {
         private readonly IStudentService _studentService;

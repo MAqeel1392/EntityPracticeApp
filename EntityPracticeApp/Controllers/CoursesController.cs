@@ -3,11 +3,13 @@ using EntityPracticeApp.Models;
 using EntityPracticeApp.Service;
 using EntityPracticeApp.Service.Interface;
 using EntityPracticeApp.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace EntityPracticeApp.Controllers
 {
+    [Authorize]
     public class CoursesController : Controller
     {
         private readonly ICourseService _courseService;

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using EntityPracticeApp.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EntityPracticeApp.Models
 {
@@ -17,7 +19,16 @@ namespace EntityPracticeApp.Models
             // Define composite key for StudentCourse join table
             modelBuilder.Entity<StudentCourse>()
                 .HasKey(sc => new { sc.StudentsSid, sc.CoursesCourseId });
+            modelBuilder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
         }
     }
 
+    internal class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<ApplicationUser>
+    {
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+        {
+            builder.Property(x => x.FirstName).HasMaxLength(255);
+            builder.Property(x => x.LastName).HasMaxLength(255);
+        }
+    }
 }
