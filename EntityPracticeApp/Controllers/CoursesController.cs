@@ -82,7 +82,7 @@ namespace EntityPracticeApp.Controllers
             return RedirectToAction("Index");
         }
         public IActionResult ShowStudent(int id)
-       
+        { 
             CourseViewModel cvm = new CourseViewModel();
             cvm.CourseId=id;
             var course = _courseService.GetCourse(cvm);
