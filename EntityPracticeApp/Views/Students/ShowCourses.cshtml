@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<EntityPracticeApp.ViewModel.CourseViewModel>
+@if (Model.Count() == 0)
+{
+    <tr>
+        <h3>No Course Found!</h3>
+    </tr>
+}
+else
+{
+        <h2>Registered Courses of <span class="text-success">@ViewBag.StudentName </span></h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}

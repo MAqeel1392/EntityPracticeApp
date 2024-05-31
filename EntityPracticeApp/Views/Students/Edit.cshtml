@@ -1,0 +1,54 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model EntityPracticeApp.ViewModel.StudentViewModel
+<form asp-action="EditPost" method="post">
+    <h3>Edit Student</h3>
+    <div>
+        <input asp-for="Sid" class="form-control" hidden />
+    </div>
+    <div>
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Phone">Phone</label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="DateOfBirth">DOB</label>
+        <input asp-for="DateOfBirth" class="form-control" disabled />
+        @* <span asp-validation-for="DateOfBirth" class="text-danger"></span> *@
+    </div>
+    <div>
+        <label asp-for="Gender">Gender</label>
+        <div class="form-check form-check-inline">
+            <label>
+                <input type="radio" asp-for="Gender" value="Male" disabled/> Male
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <label>
+                <input type="radio" asp-for="Gender" value="Female" disabled/> Female
+            </label>
+        </div>
+        @* <div><span asp-validation-for="Gender" class="text-danger"></span></div> *@
+    </div>
+    <div class="form-group">
+        <input type="submit" value="EditPost" class="btn btn-primary" />
+    </div>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

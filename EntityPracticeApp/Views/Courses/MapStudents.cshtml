@@ -1,0 +1,76 @@
+﻿@model IEnumerable<EntityPracticeApp.ViewModel.StudentViewModel>
+
+@{
+    var courseId = TempData["courseId"];
+}
+
+@if (!Model.Any())
+{
+    <h3>No Course Found!</h3>
+}
+else
+{
+    <h2>Students in course <span class="text-success">@ViewBag.CourseName</span></h2>
+    <form id="collectiveForm" asp-action="MapStudentsPost" method="post">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>IsSelected</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>DOB</th>
+                    <th>University</th>
+                    <th>Gender</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="selectedStudents" value="@item.Sid" value="@item.Sid" @(item.isAssigned ? "checked" : "") />
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        <td>@item.Phone</td>
+                        <td>@item.DateOfBirth</td>
+                        <td>@item.University</td>
+                        <td>@item.Gender</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary change-mapping-btn" data-sid="@item.Sid" data-course-id="@TempData["courseId"]" data-is-selected="@item.isAssigned">Change Mapping</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="form-group">
+            <input type="hidden" name="courseId" value="@TempData["courseId"]" />
+            <input type="submit" value="Map Students" class="btn btn-primary" />
+        </div>
+    </form>
+
+    <script>
+        document.querySelectorAll('.change-mapping-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const sid = this.getAttribute('data-sid');
+                const courseId = this.getAttribute('data-course-id');
+                const isSelected = this.getAttribute('data-is-selected');
+
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '@Url.Action("UpdateMapping")';
+
+                form.innerHTML = `
+                            <input type="hidden" name="sid" value="${sid}" />
+                            <input type="hidden" name="courseId" value="${courseId}" />
+                            <input type="hidden" name="isSelected" value="${isSelected}" />
+                        `;
+
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+    </script>
+}
