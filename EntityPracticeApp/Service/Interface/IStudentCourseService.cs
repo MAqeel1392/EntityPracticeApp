@@ -6,7 +6,7 @@ namespace EntityPracticeApp.Service.Interface
     public interface IStudentCourseService
     {
         //List<CourseViewModel> SelectCourse(int studentId, string Name);
-        List<CourseViewModel> SelectCourse(int studentId);
+        List<CourseViewModel> SelectCourse(int studentId, out List<StudentCourse> sc);
         List<StudentViewModel> SelectStudent(int cid);
         List<StudentViewModel> SelectStudent(int courseId, out List<StudentCourse> sc);
 
@@ -15,5 +15,6 @@ namespace EntityPracticeApp.Service.Interface
         List<StudentViewModel> MapStudent(int courseId);
         void MapStudentPost(int courseId, List<int> selectedStudents);
         void UpdateSingleStudent(StudentCourseViewModel studentCourseViewModel);
+        void UpdateSingleCourse(StudentCourseViewModel studentCourseViewModel);
     }
 }

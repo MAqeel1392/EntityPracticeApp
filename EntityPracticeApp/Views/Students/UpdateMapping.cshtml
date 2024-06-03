@@ -1,8 +1,4 @@
-﻿@model IEnumerable<EntityPracticeApp.ViewModel.StudentViewModel>
-
-@{
-    var courseId = TempData["courseId"];
-}
+﻿@model IEnumerable<EntityPracticeApp.ViewModel.CourseViewModel>
 
 @if (!Model.Any())
 {
@@ -10,18 +6,15 @@
 }
 else
 {
-    <h2>Students in course <span class="text-success">@ViewBag.CourseName</span></h2>
-    <form id="collectiveForm" asp-action="MapStudentsPost" method="post">
+    <h2>Update Courses of <span class="text-success">@ViewBag.StudentName</span></h2>
+    <form asp-action="MapCoursesPost" method="post">
+        <input type="hidden" name="StudentId" value="@TempData["StudentId"]" />
         <table class="table">
             <thead>
                 <tr>
                     <th>IsSelected</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>DOB</th>
-                    <th>University</th>
-                    <th>Gender</th>
+                    <th>Title</th>
+                    <th>Description</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -30,32 +23,27 @@ else
                 {
                     <tr>
                         <td>
-                            <input type="checkbox" name="selectedStudents" value="@item.Sid" value="@item.Sid" @(item.isAssigned ? "checked" : "") />
+                            <input type="checkbox" name="selectedCourses" value="@item.CourseId" @(item.isAssigned ? "checked" : "") />
                         </td>
-                        <td>@item.Name</td>
-                        <td>@item.Email</td>
-                        <td>@item.Phone</td>
-                        <td>@item.DateOfBirth</td>
-                        <td>@item.University</td>
-                        <td>@item.Gender</td>
+                        <td>@item.Title</td>
+                        <td>@item.Description</td>
                         <td>
-                            <button type="button" class="btn btn-secondary change-mapping-btn" data-sid="@item.Sid" data-course-id="@TempData["courseId"]" data-is-selected="@item.isAssigned">Change Mapping</button>
+                            <button type="button" class="btn btn-secondary change-mapping-btn" data-course-id="@item.CourseId" data-student-id="@TempData["StudentId"]" data-is-selected="@item.isAssigned">Change Mapping</button>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
         <div class="form-group">
-            <input type="hidden" name="courseId" value="@TempData["courseId"]" />
-            <input type="submit" value="Map Students" class="btn btn-primary" />
+            <input type="submit" value="Map Courses" class="btn btn-primary" />
         </div>
     </form>
 
     <script>
         document.querySelectorAll('.change-mapping-btn').forEach(button => {
             button.addEventListener('click', function () {
-                const sid = this.getAttribute('data-sid');
                 const courseId = this.getAttribute('data-course-id');
+                const studentId = this.getAttribute('data-student-id');
                 const isSelected = this.getAttribute('data-is-selected');
 
                 const form = document.createElement('form');
@@ -63,8 +51,8 @@ else
                 form.action = '@Url.Action("UpdateMapping")';
 
                 form.innerHTML = `
-                                    <input type="hidden" name="sid" value="${sid}" />
                                     <input type="hidden" name="courseId" value="${courseId}" />
+                                    <input type="hidden" name="studentId" value="${studentId}" />
                                     <input type="hidden" name="isSelected" value="${isSelected}" />
                                 `;
 

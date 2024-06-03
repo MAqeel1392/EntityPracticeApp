@@ -1,23 +1,20 @@
 ﻿@model IEnumerable<EntityPracticeApp.ViewModel.CourseViewModel>
-
+@{
+    var studentId = TempData["studentId"];
+}
 @if (!Model.Any())
 {
-    <tr>
-        <td colspan="3">
-            <h3>No Course Found!</h3>
-        </td>
-    </tr>
+    <h3>No Course Found!</h3>
 }
 else
 {
-    @* @TempData["studentId"] *@
-        <h2>Update Courses of <span class="text-success">@ViewBag.StudentName </span></h2>
-    <form asp-action="MapCourses" method="post">
+    <h2>Update Courses of <span class="text-success">@ViewBag.StudentName</span></h2>
+    <form asp-action="MapCoursesPost" method="post">
         <input type="hidden" name="StudentId" value="@TempData["StudentId"]" />
         <table class="table">
             <thead>
                 <tr>
-                    <th>Selected</th>
+                    <th>IsSelected</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Actions</th>
@@ -28,18 +25,43 @@ else
                 {
                     <tr>
                         <td>
-                            <input type="checkbox" name="selectedCourses" value="@item.CourseId" @(item.isAssigned ? "checked" : "") />
+                            <input type="checkbox" name="selectedCourses" value="@item.CourseId" value="@item.CourseId" @(item.isAssigned ? "checked" : "") />
                         </td>
                         <td>@item.Title</td>
                         <td>@item.Description</td>
-                        <td></td>
+                        <td>
+                            <button type="button" class="btn btn-secondary change-mapping-btn" data-course-id="@item.CourseId" data-student-id="@TempData["StudentId"]" data-is-selected="@item.isAssigned">Change Mapping</button>
+                        </td>
                     </tr>
                 }
             </tbody>
-            <div class="form-group">
-                <input type="submit" value="Map Courses" class="btn btn-primary" />
-            </div>
         </table>
-
+        <div class="form-group">
+            <input type="hidden" name="studentId" value="@TempData["StudentId"]" />
+            <input type="submit" value="Map Courses" class="btn btn-primary" />
+        </div>
     </form>
+
+    <script>
+        document.querySelectorAll('.change-mapping-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const courseId = this.getAttribute('data-course-id');
+                const studentId = this.getAttribute('data-student-id');
+                const isSelected = this.getAttribute('data-is-selected');
+
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '@Url.Action("UpdateMapping")';
+
+                form.innerHTML = `
+                            <input type="hidden" name="courseId" value="${courseId}" />
+                            <input type="hidden" name="studentId" value="${studentId}" />
+                            <input type="hidden" name="isSelected" value="${isSelected}" />
+                        `;
+
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+    </script>
 }

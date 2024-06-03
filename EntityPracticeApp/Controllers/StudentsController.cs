@@ -6,10 +6,11 @@ using EntityPracticeApp.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
+using EntityPracticeApp.Migrations;
 
 namespace EntityPracticeApp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class StudentsController : Controller
     {
         private readonly IStudentService _studentService;
@@ -101,7 +102,7 @@ namespace EntityPracticeApp.Controllers
             svm.Sid = id;
             var student = _studentService.GetStudent(svm);
             ViewBag.StudentName =  student.Name;
-            List<CourseViewModel> courses = _studentCourseService.SelectCourse(id);
+            List<CourseViewModel> courses = _studentCourseService.SelectCourse(id, out List<StudentCourse> scList);
             return View(courses);
         }
         public IActionResult MapCourses(int id)
@@ -116,12 +117,38 @@ namespace EntityPracticeApp.Controllers
             return View(courses);
         }
         [HttpPost]
-        public IActionResult MapCourses(int studentId, List<int> selectedCourses)
+        public IActionResult MapCoursesPost(int studentId, List<int> selectedCourses)
         {
+            TempData["studentId"] = studentId;
             _studentCourseService.PostMapCourses(studentId, selectedCourses);
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public IActionResult UpdateMapping(int studentId, int courseId, bool isSelected)
+        {
+            var studentCourse = new StudentCourseViewModel
+            {
+                StudentsSid = studentId,
+                CoursesCourseId = courseId,
+                CourseAssigned = isSelected
+            };
+            _studentCourseService.UpdateSingleCourse(studentCourse);
+            TempData["studentId"] = studentId;
+            TempData.Keep();
 
+            return View(MapCoursesResult(studentId));
+        }
+
+        public List<CourseViewModel> MapCoursesResult(int id)
+        {
+            List<CourseViewModel> courses = _studentCourseService.MapCourse(id);
+            StudentViewModel svm = new StudentViewModel();
+            svm.Sid = id;
+            var student = _studentService.GetStudent(svm);
+            ViewBag.StudentName = student.Name;
+            TempData["StudentId"] = id;
+            return courses;
+        }
 
     }
 }
