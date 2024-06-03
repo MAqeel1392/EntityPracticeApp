@@ -60,15 +60,33 @@ namespace EntityPracticeApp.Service
             _dbContext.Remove(course);
             _dbContext.SaveChanges();
         }
-        
+
         public void UpdateCourse(CourseViewModel cvm)
         {
-            var course = _dbContext.Courses.FirstOrDefault(x=>x.CourseId== cvm.CourseId);
+            var course = _dbContext.Courses.FirstOrDefault(x => x.CourseId == cvm.CourseId);
+
+            if (course == null)
+            {
+                throw new Exception($"Course with ID {cvm.CourseId} not found.");
+            }
+
             course.Title = cvm.Title;
             course.Description = cvm.Description;
+            course.UpdatedDate = DateTime.Now; // Optionally track when the course was last updated
 
-            _dbContext.Courses.Update(course);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (assumes you have a logging mechanism in place)
+                // _logger.LogError(ex, "Error updating course with ID {CourseId}", cvm.CourseId);
+
+                // Re-throw the exception or handle it as needed
+                throw new Exception("An error occurred while updating the course. Please try again.", ex);
+            }
         }
+
     }
 }

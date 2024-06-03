@@ -41,27 +41,40 @@ else
             <input type="submit" value="Map Courses" class="btn btn-primary" />
         </div>
     </form>
-
     <script>
-        document.querySelectorAll('.change-mapping-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const courseId = this.getAttribute('data-course-id');
-                const studentId = this.getAttribute('data-student-id');
-                const isSelected = this.getAttribute('data-is-selected');
-
+        // Function to handle the confirmation dialog
+        function handleMappingChange(courseId, studentId, isSelected) {
+            const result = confirm("Are you sure you want to change mapping?");
+            if (result) {
                 const form = document.createElement('form');
                 form.method = 'post';
                 form.action = '@Url.Action("UpdateMapping")';
 
                 form.innerHTML = `
-                            <input type="hidden" name="courseId" value="${courseId}" />
-                            <input type="hidden" name="studentId" value="${studentId}" />
-                            <input type="hidden" name="isSelected" value="${isSelected}" />
-                        `;
+                        <input type="hidden" name="courseId" value="${courseId}" />
+                        <input type="hidden" name="studentId" value="${studentId}" />
+                        <input type="hidden" name="isSelected" value="${isSelected}" />
+                    `;
 
                 document.body.appendChild(form);
                 form.submit();
-            });
+            }
+        }
+
+        // Attach event listener to the document
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('change-mapping-btn')) {
+                event.preventDefault(); // Prevent default form submission behavior
+                const button = event.target;
+                const courseId = button.getAttribute('data-course-id');
+                const studentId = button.getAttribute('data-student-id');
+                const isSelected = button.getAttribute('data-is-selected');
+
+                // Call the function to handle the confirmation dialog
+                handleMappingChange(courseId, studentId, isSelected);
+            }
         });
     </script>
+
+
 }

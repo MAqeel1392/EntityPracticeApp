@@ -28,20 +28,23 @@
         <label asp-for="DateOfBirth">DOB</label>
         <input asp-for="DateOfBirth" class="form-control" disabled />
         @* <span asp-validation-for="DateOfBirth" class="text-danger"></span> *@
+        <input type="hidden" asp-for="DateOfBirth" />
+
     </div>
     <div>
-        <label asp-for="Gender">Gender</label>
+        <label>Gender</label>
         <div class="form-check form-check-inline">
-            <label>
-                <input type="radio" asp-for="Gender" value="Male" disabled/> Male
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" value="Male" disabled @(Model.Gender == "Male" ? "checked" : "") /> Male
             </label>
         </div>
         <div class="form-check form-check-inline">
-            <label>
-                <input type="radio" asp-for="Gender" value="Female" disabled/> Female
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" value="Female" disabled @(Model.Gender == "Female" ? "checked" : "") /> Female
             </label>
         </div>
-        @* <div><span asp-validation-for="Gender" class="text-danger"></span></div> *@
+        <!-- Hidden field to send the gender value -->
+        <input type="hidden" asp-for="Gender" />
     </div>
     <div class="form-group">
         <input type="submit" value="EditPost" class="btn btn-primary" />

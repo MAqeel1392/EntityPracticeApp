@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace EntityPracticeApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles =SD.Role_Customer)]
     public class CoursesController : Controller
     {
         private readonly ICourseService _courseService;
@@ -21,6 +21,7 @@ namespace EntityPracticeApp.Controllers
             _studentCourseService = studentCourseService;
         }
 
+        //[Authorize()]
         public async Task<IActionResult> Index()
         {
 
@@ -73,11 +74,24 @@ namespace EntityPracticeApp.Controllers
             {
                 return View(cvm);
             }
-            _courseService.UpdateCourse(cvm);
-            return RedirectToAction("Index");
 
-           
+            try
+            {
+                _courseService.UpdateCourse(cvm);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (assumes you have a logging mechanism in place)
+                // _logger.LogError(ex, "Error updating course with ID {CourseId}", cvm.CourseId);
+
+                // Optionally, add a model error to notify the user
+                ModelState.AddModelError("", "An error occurred while updating the course. Please try again.");
+
+                return View(cvm);
+            }
         }
+
         public IActionResult Delete (int id)
         {
             _courseService.RemoveCourse(id);
