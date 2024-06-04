@@ -9,7 +9,11 @@ using System.Collections.Generic;
 
 namespace EntityPracticeApp.Controllers
 {
-    [Authorize(Roles =SD.Role_Customer)]
+    //[Authorize(Roles =SD.Role_Customer)]
+    //[Authorize]
+    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "client")]
+    [Authorize(Roles = "Admin")]
     public class CoursesController : Controller
     {
         private readonly ICourseService _courseService;
@@ -22,15 +26,20 @@ namespace EntityPracticeApp.Controllers
         }
 
         //[Authorize()]
+        //[Authorize(Roles = "client")]
         public async Task<IActionResult> Index()
         {
 
             List<CourseViewModel> courses =  await _courseService.GetAllCourses();
             return View(courses);
         }
+
+        //[Authorize(Roles = "Admin")]
         public IActionResult Add() {
             return View();
         }
+
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Add(CourseViewModel cvm)
         {
@@ -58,7 +67,7 @@ namespace EntityPracticeApp.Controllers
             }
 
         }
-         
+        //[Authorize(Roles = "Admin")]
         public  IActionResult Edit(int id)
         {
 
@@ -67,6 +76,7 @@ namespace EntityPracticeApp.Controllers
             cvm = _courseService.GetCourse(cvm);
             return View(cvm);
         }
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult EditPost(CourseViewModel cvm)
         {
@@ -91,12 +101,13 @@ namespace EntityPracticeApp.Controllers
                 return View(cvm);
             }
         }
-
+        //[Authorize(Roles = "Admin")]
         public IActionResult Delete (int id)
         {
             _courseService.RemoveCourse(id);
             return RedirectToAction("Index");
         }
+        //[Authorize(Roles = "client")]
         public IActionResult ShowStudent(int id)
         { 
             CourseViewModel cvm = new CourseViewModel();
@@ -106,6 +117,7 @@ namespace EntityPracticeApp.Controllers
             List<StudentViewModel> students = _studentCourseService.SelectStudent(id, out List<StudentCourse> scList);
             return View(students);
         }
+        //[Authorize(Roles = "Admin")]
         public IActionResult MapStudents(int id)
         {
 
@@ -124,7 +136,7 @@ namespace EntityPracticeApp.Controllers
             //TempData["courseId"] = id;
             //return View(students);
         }
-
+        //[Authorize(Roles = "Admin")]
         public List<StudentViewModel> MapStudentsResult(int id)
         {
 
@@ -143,7 +155,7 @@ namespace EntityPracticeApp.Controllers
             //TempData["courseId"] = id;
             //return View(students);
         }
-
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult MapStudentsPost(int courseId, List<int>selectedStudents)
         {
@@ -152,6 +164,7 @@ namespace EntityPracticeApp.Controllers
 
             return RedirectToAction("Index");
         }
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public  IActionResult UpdateMapping(int sid, int courseId, bool isSelected)
         {

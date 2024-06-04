@@ -11,6 +11,7 @@ using EntityPracticeApp.Migrations;
 namespace EntityPracticeApp.Controllers
 {
     //[Authorize]
+    [Authorize(Roles = "Admin")]
     public class StudentsController : Controller
     {
         private readonly IStudentService _studentService;
@@ -27,11 +28,13 @@ namespace EntityPracticeApp.Controllers
             List<StudentViewModel> students = await _studentService.GetAllStudent();
             return View(students);
         }
+        //[Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Add(StudentViewModel student)
         {
@@ -59,6 +62,7 @@ namespace EntityPracticeApp.Controllers
             }
         }
 
+        //[Authorize(Roles = "admin")]
         [HttpGet]
         public  IActionResult Edit(int id)
         {
@@ -76,6 +80,7 @@ namespace EntityPracticeApp.Controllers
                 return NotFound();
             }
         }
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult EditPost(StudentViewModel student)
         {
@@ -90,6 +95,7 @@ namespace EntityPracticeApp.Controllers
             return RedirectToAction("Index");
 
         }
+        //[Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             _studentService.DeleteStudent(id);
@@ -105,6 +111,7 @@ namespace EntityPracticeApp.Controllers
             List<CourseViewModel> courses = _studentCourseService.SelectCourse(id, out List<StudentCourse> scList);
             return View(courses);
         }
+        //[Authorize(Roles = "admin")]
         public IActionResult MapCourses(int id)
         {
             TempData["studentId"] = id;
@@ -116,6 +123,7 @@ namespace EntityPracticeApp.Controllers
             List<CourseViewModel> courses = _studentCourseService.MapCourse(id);
             return View(courses);
         }
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult MapCoursesPost(int studentId, List<int> selectedCourses)
         {
@@ -123,6 +131,7 @@ namespace EntityPracticeApp.Controllers
             _studentCourseService.PostMapCourses(studentId, selectedCourses);
             return RedirectToAction("Index");
         }
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult UpdateMapping(int studentId, int courseId, bool isSelected)
         {
@@ -138,7 +147,7 @@ namespace EntityPracticeApp.Controllers
 
             return View(MapCoursesResult(studentId));
         }
-
+        //[Authorize(Roles = "admin")]
         public List<CourseViewModel> MapCoursesResult(int id)
         {
             List<CourseViewModel> courses = _studentCourseService.MapCourse(id);
